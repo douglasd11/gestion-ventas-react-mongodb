@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/gestion_ventas_db');
+mongoose.connect('mongodb+srv://dgdavid2:dg12345@gestionventas1.edum5w1.mongodb.net/?retryWrites=true&w=majority');
+
 
 const objetobd = mongoose.connection
 
