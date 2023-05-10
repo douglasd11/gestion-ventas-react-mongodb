@@ -6,6 +6,7 @@ import VentaInd from './VentaInd';
 
 function ListaVentas(){
     
+    const[busqueda, setBusqueda] = useState('')
     const[dataventa, setDataventa] = useState([])
     
     useEffect(() => {
@@ -16,11 +17,29 @@ function ListaVentas(){
         })
     }, [])
 
-    const listaVentas = dataventa.map(venta => {
+    let listaVentas = dataventa.map(venta => {
         return(
             <VentaInd key={venta._id} venta={venta}/>
         )
     })
+
+    useEffect(() => {
+        listaVentas = dataventa.map(venta => {
+            return(
+                <VentaInd key={venta._id} venta={venta}/>
+            )
+        })
+    }, [dataventa])
+
+    function buscarVenta(){
+
+        clienteAxios.get('venta/obtenerVentas').then(res => {
+            setDataventa(res.data.filter(vent => vent.factura.toString().includes(busqueda)))
+            
+        }).catch(err => {
+            console.log(err)
+        })
+    }
     
 
     return(
@@ -30,8 +49,8 @@ function ListaVentas(){
             <h2>Lista de ventas</h2>
 
             <div className='container-fluider d-flex col-5 my-4'>
-                <input type="text" className="form-control me-3" id="busq" placeholder='busqueda' aria-describedby="busqueda"/>
-                <button className='btn btn-primary'>Buscar</button>
+                <input type="text" className="form-control me-3" placeholder='busqueda' value={busqueda} onChange={(e)=>{setBusqueda(e.target.value)}}/>
+                <button onClick={buscarVenta} className='btn btn-primary'>Buscar</button>
             </div>
 
             <table className="table table-striped table-hover bg-light">

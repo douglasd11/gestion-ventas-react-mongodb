@@ -5,6 +5,7 @@ import clienteAxios from '../axios/ClienteAxios';
 
 function ListaUsuarios(){
     
+    const[busqueda, setBusqueda] = useState('')
     const[datausuario, setDatausuario] = useState([])
 
     useEffect(() => {
@@ -15,11 +16,29 @@ function ListaUsuarios(){
         })
     }, [])
 
-    const listausuarios = datausuario.map(usuario => {
+    let listausuarios = datausuario.map(usuario => {
         return(
             <UsuarioInd key={usuario._id} usuario={usuario}/>
         )
     })
+
+    useEffect(() => {
+        listausuarios = datausuario.map(usuario => {
+            return(
+                <UsuarioInd key={usuario._id} usuario={usuario}/>
+            )
+        })    
+    }, [datausuario])
+
+    function buscarUsuario(){
+
+        clienteAxios.get('usuario/obtenerUsuarios').then(res => {
+            setDatausuario(res.data.filter(user => user.nombre.includes(busqueda)))
+            
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     return(
         <div className='container col-8 mt-4'>
@@ -29,8 +48,8 @@ function ListaUsuarios(){
             <h2>Lista de usuarios</h2>
 
             <div className='container-fluider d-flex col-5 my-5'>
-                <input type="text" className="form-control me-3" id="busq" placeholder='busqueda' aria-describedby="busqueda"/>
-                <button className='btn btn-primary'>Buscar</button>
+                <input type="text" className="form-control me-3" placeholder='busqueda' value={busqueda} onChange={(e)=>{setBusqueda(e.target.value)}}/>
+                <button onClick={buscarUsuario} className='btn btn-primary'>Buscar</button>
             </div>
 
             <table className="table table-striped table-hover bg-light">

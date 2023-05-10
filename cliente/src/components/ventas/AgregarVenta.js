@@ -80,6 +80,7 @@ function AgregarVenta(){
     const[datausuario, setDatausuario] = useState([])
     useEffect(() => {
         clienteAxios.get('usuario/obtenerusuarios').then(res => {
+            setVendedor(res.data[0].idusuario)
             setDatausuario(res.data)
         }).catch(err => {
             console.log(err)
@@ -89,6 +90,8 @@ function AgregarVenta(){
     const listaVendedores = datausuario.map(usuario => {
         return <option key={usuario.idusuario} value={usuario.idusuario}>{usuario.nombre}</option>
     })
+
+    
     
     /*
     function valVendedor(perfil){
